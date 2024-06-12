@@ -15,9 +15,6 @@ from ultralytics import YOLO
 detection_graph = tf.compat.v1.Graph()
 sys.path.append("..")
 
-# score threshold for showing bounding boxes.
-_score_thresh = 0.27
-
 MODEL_NAME = 'handtracking/hand_inference_graph'
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
 PATH_TO_CKPT = MODEL_NAME + '/frozen_inference_graph.pb'
@@ -97,7 +94,7 @@ def draw_box_on_image(num_hands_detect, score_thresh, scores, boxes, im_width, i
             p2 = (int(right), int(bottom))
             hands.append([p1,p2]) 
             cv2.rectangle(image_np, p1, p2, (77, 255, 9), 3, 1)
-    if len(hands)==2:   
+    if len(hands)==num_hands_detect:   
         #check_object_in_between(hands,image_np) 
         return True 
     return False # no hands detected 
@@ -123,6 +120,7 @@ def detect_objects(image_np, detection_graph):
             (boxes, scores, classes, num) = sess.run(
                 [detection_boxes, detection_scores, detection_classes, num_detections],
                 feed_dict={image_tensor: image_np_expanded})
+            print("SCORES",scores[0][0]) 
      
     return np.squeeze(boxes), np.squeeze(scores)
 
