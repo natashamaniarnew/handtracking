@@ -76,4 +76,3 @@ def get_label_map():
         label_map, use_display_name=False
     )
     return categories, category_index, label_map_dict
-    
